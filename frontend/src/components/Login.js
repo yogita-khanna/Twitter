@@ -20,12 +20,7 @@ const Login = () => {
     if (isLogin) {
       // login
       try {
-        const res = await axios.post(`${USER_API_END_POINT}/login`, { email, password }, {
-          headers: {
-            'Content-Type': "application/json"
-          },
-          withCredentials: true
-        }); 
+        const res = await axios.post(`${USER_API_END_POINT}/login`, { email, password }); 
         dispatch(getUser(res?.data?.user));
         if(res.data.success){
           navigate("/");
