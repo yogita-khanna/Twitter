@@ -59,7 +59,7 @@ const Login = () => {
     <div className='w-screen h-screen flex items-center justify-center'>
       <div className='flex items-center justify-evenly w-[80%]'>
         <div>
-          <img className='ml-5' width={"300px"} src="https://www.edigitalagency.com.au/wp-content/uploads/new-Twitter-logo-x-black-png-1200x1227.png" alt="twitter-logo" />
+          <img className='ml-5' width={"300px"} src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT56Gnsv1-VbZYG78iHjLogURyJBAs_9m7ESQ&s" alt="twitter-logo" />
         </div>
         <div>
           <div className='my-5'>
