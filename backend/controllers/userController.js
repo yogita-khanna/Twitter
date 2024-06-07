@@ -5,79 +5,107 @@ import jwt from "jsonwebtoken";
 export const Register = async (req, res) => {
     try {
         const { name, username, email, password } = req.body;
-        // basic validation
-        if (!name || !username || !email || !password) {
+        
+        // Basic validation
+        if (!name, !username, !email, !password) {
             return res.status(401).json({
                 message: "All fields are required.",
                 success: false
-            })
+            });
         }
+
+        // Check if the user already exists
         const user = await User.findOne({ email });
         if (user) {
             return res.status(401).json({
-                message: "User already exist.",
+                message: "User already exists.",
                 success: false
-            })
+            });
         }
+
+        // Hash the password
         const hashedPassword = await bcryptjs.hash(password, 16);
 
+        // Create a new user
         await User.create({
             name,
             username,
             email,
             password: hashedPassword
         });
+
         return res.status(201).json({
             message: "Account created successfully.",
             success: true
-        })
-
+        });
     } catch (error) {
-        console.log(error);
+        console.error('Error in Register:', error);
+        return res.status(500).json({
+            message: "Internal Server Error",
+            success: false
+        });
     }
-}
+};
+
 export const Login = async (req, res) => {
     try {
         const { email, password } = req.body;
+
+        // Basic validation
         if (!email || !password) {
             return res.status(401).json({
                 message: "All fields are required.",
                 success: false
-            })
-        };
+            });
+        }
+
+        // Check if the user exists
         const user = await User.findOne({ email });
         if (!user) {
             return res.status(401).json({
                 message: "Incorrect email or password",
                 success: false
-            })
+            });
         }
+
+        // Check if the password matches
         const isMatch = await bcryptjs.compare(password, user.password);
         if (!isMatch) {
             return res.status(401).json({
-                message: "Incorect email or password",
+                message: "Incorrect email or password",
                 success: false
             });
         }
+
+        // Generate JWT token
         const tokenData = {
             userId: user._id
-        }
+        };
         const token = await jwt.sign(tokenData, process.env.TOKEN_SECRET, { expiresIn: "1d" });
+
         return res.status(201).cookie("token", token, { expiresIn: "1d", httpOnly: true }).json({
             message: `Welcome back ${user.name}`,
             user,
             success: true
-        })
+        });
     } catch (error) {
-        console.log(error);
+        console.error('Error in Login:', error);
+        return res.status(500).json({
+            message: "Internal Server Error",
+            success: false
+        });
     }
-}
+};
+
 export const logout = (req, res) => {
     return res.cookie("token", "", { expiresIn: new Date(Date.now()) }).json({
-        message: "user logged out successfully.",
+        message: "User logged out successfully.",
         success: true
-    })
-}
+    });
+};
+
+// Other functions (bookmark, getMyProfile, getOtherUsers, follow, unfollow) remain unchanged
+
 
 export const bookmark = async (req, res) => {
     try {
